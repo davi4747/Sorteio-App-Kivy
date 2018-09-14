@@ -1,0 +1,526 @@
+# Made by Davi Sousa, Twitter: @davi4747, Instagram: @davisousa_80, Github Profile: github.com/davi4747
+
+<Gerenciador>:
+    Main_menu:
+        name: 'menu_principal'
+    Nomes:
+        name: 'menu_nomes'
+    Load:
+        name: 'load'
+    Edit:
+        name: 'edit'
+    Resultado:
+        name: 'resultado'
+    Numeros:
+        name: 'numeros'
+    Sobre:
+        name: 'sobre'
+
+<Main_menu>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 80
+        canvas:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 80
+            Label:
+            Image:
+                size_hint_y: None
+                height: 400
+                source: 'logom.png'
+            Botaor:
+                text: 'NOMES'
+                size_hint_y: None
+                height: 150
+                on_release: app.root.current = 'menu_nomes'
+            Botaor:
+                text: 'NÚMEROS'
+                size_hint_y: None
+                height: 150
+                on_release:
+                    app.root.get_screen('numeros').ids.label_aviso.text = ''
+                    app.root.get_screen('numeros').ids.label_resultado.text = ''
+                    app.root.get_screen('numeros').ids.text1.text = '0'
+                    app.root.get_screen('numeros').ids.text2.text = '500'
+                    app.root.current = 'numeros'
+            Botaor:
+                text: 'SOBRE'
+                size_hint_y: None
+                height: 150
+                on_release: app.root.current = 'sobre'
+            Botaor:
+                text: 'SAIR'
+                size_hint_y: None
+                height: 150
+                on_release: root.confirmacao()
+            Label:
+
+<Botaor@ButtonBehavior+Label>:
+    canvas.before:
+        Color:
+            rgba: self.cor
+        Ellipse:
+            pos: self.pos
+            size: self.height, self.height
+        Ellipse:
+            pos: self.x + self.width - self.height, self.y
+            size: self.height, self.height
+        Rectangle:
+            pos: self.x + self.height / 2.0, self.y
+            size: self.width - self.height, self.height
+
+<Nomes>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'INÍCIO'
+                    app_icon: app.icon if app.icon else ''
+                    on_release: root.back()
+                ActionSeparator:
+                ActionButton:
+                    text: 'CONFIRMAR'
+                    on_release:
+                        app.root.get_screen('resultado').preparar()
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: None
+            height: 200
+            text: 'Digite e confirme os participantes!'
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: None
+            height: 200
+            padding: 50
+            spacing: 20
+            TextInput:
+                id: text1
+                font_size: 70
+            Button:
+                text: 'ADICIONAR'
+                size_hint_x: None
+                width: 280
+                on_release: app.root.get_screen('menu_nomes').confirmar_nome()
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: 'PARTICIPANTES:'
+            size_hint_y: None
+            height: 100
+        ScrollView:
+            BoxLayout:
+                id: box_participantes
+                spacing: 27
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: None
+            height: 200
+            padding: 50
+            spacing: 20
+            Button:
+                text: 'Carregar Lista'
+                on_release: root.carregar()
+            Button:
+                text: 'Salvar Lista'
+                on_release:
+                    root.verificar()
+
+<Participante>:
+    size_hint_y: None
+    height: 136
+    padding: 32
+    Label:
+        id: labelp
+    Botaor:
+        cor: (0.4,0.1,0.1,1)
+        cor2: (0.47,0.1,0.1,1)
+        text: 'Excluir'
+        size_hint_x: None
+        size_hint_y: None
+        height: 96
+        width: 190
+        on_release:
+            app.root.get_screen('menu_nomes').lista_nomes_temp.remove(root.ids.labelp.text)
+            app.root.get_screen('menu_nomes').ids.box_participantes.remove_widget(root)
+
+<Titulo>:
+    size_hint_y: None
+    height: 200
+    padding: 32
+    spacing: 30
+    Botaor:
+        id: labelt
+        on_release:
+            app.root.get_screen('menu_nomes').titulo = root.ids.labelt.text
+            app.root.get_screen('menu_nomes').recolocar()
+    Botaor:
+        cor: (0.4,0.1,0.1,1)
+        cor2: (0.47,0.1,0.1,1)
+        text: 'Excluir'
+        size_hint_x: None
+        width: 190
+        on_release:
+            app.root.get_screen('menu_nomes').removert(root.ids.labelt.text)
+            app.root.get_screen('load').ids.box_titulos.remove_widget(root)
+
+<Load>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'VOLTAR'
+                    app_icon: app.icon if app.icon else ''
+                    on_release:
+                        app.root.current = 'menu_nomes'
+                        root.ids.box_titulos.clear_widgets()
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: 'LISTAS SALVAS:'
+            size_hint_y: None
+            height: 100
+        ScrollView:
+            BoxLayout:
+                id: box_titulos
+                padding: 8
+                spacing: 20
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+<Edit>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'VOLTAR'
+                    app_icon: app.icon if app.icon else ''
+                    on_release:
+                        app.root.current = 'menu_nomes'
+                ActionSeparator:
+                ActionButton:
+                    text: 'CONFIRMAR'
+                    on_release:
+                        app.root.get_screen('menu_nomes').salvar()
+        BoxLayout:
+            size_hint_y: None
+            height: 160
+            canvas.before:
+                Color:
+                    rgba: 0.19, 0.19, 0.19, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: 'Título:'
+                font_size: 60
+            Label:
+                id: label_titulo
+                text: '---'
+                font_size: 60
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: 'ADICIONAR NOME:'
+            size_hint_y: None
+            height: 100
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: None
+            height: 200
+            padding: 50
+            spacing: 20
+            TextInput:
+                id: text2
+                font_size: 70
+            Button:
+                text: 'OK'
+                size_hint_x: None
+                width: 90
+                on_release:
+                    root.ids.label_titulo.text = root.ids.text2.text.strip()
+                    root.titulo = root.ids.text2.text.strip()
+                    root.ids.text2.text = ''
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1,0.1,0.1,0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+<Resultado>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'INÍCIO'
+                    app_icon: app.icon if app.icon else ''
+                    on_release:
+                        root.ids.box_resultado.clear_widgets()
+                        root.lista_temp = []
+                        app.root.current = 'menu_principal'
+                ActionSeparator:
+                ActionButton:
+                    text: 'SORTEAR NOVAMENTE'
+                    on_release: root.sortear()
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.45
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: 'RESULTADO:'
+            font_size: 60
+            size_hint_y: None
+            height: 177
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: label_top
+            size_hint_y: None
+            height: 112
+        ScrollView:
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.73
+                id: box_resultado
+                spacing: 27
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+
+<Sorteado>:
+    font_size: 57
+    size_hint_y: None
+    height: 136
+
+<Numeros>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'INÍCIO'
+                    app_icon: app.icon if app.icon else ''
+                    on_release:
+                        app.root.current = 'menu_principal'
+                ActionSeparator:
+                ActionButton:
+                    text: 'SORTEAR'
+                    on_release: root.sortear()
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.45
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: None
+            height: 450
+            BoxLayout:
+                orientation: 'vertical'
+                padding: 76
+                spacing: 20
+                Botaor:
+                    cor: (0.1,0.4,0.1,1)
+                    cor2: (0.1,0.47,0.1,1)
+                    text: '+1'
+                    on_release: root.aumentar1()
+                TextInput:
+                    id: text1
+                    font_size: 65
+                    text: '0'
+                Botaor:
+                    cor: (0.4,0.1,0.1,1)
+                    cor2: (0.47,0.1,0.1,1)
+                    text: '-1'
+                    on_release: root.diminuir1()
+            Label:
+                text: 'ATÉ'
+            BoxLayout:
+                orientation: 'vertical'
+                padding: 76
+                spacing: 20
+                Botaor:
+                    cor: (0.1,0.4,0.1,1)
+                    cor2: (0.1,0.47,0.1,1)
+                    text: '+1'
+                    on_release: root.aumentar2()
+                TextInput:
+                    id: text2
+                    font_size: 65
+                    text: '500'
+                Botaor:
+                    cor: (0.4,0.1,0.1,1)
+                    cor2: (0.47,0.1,0.1,1)
+                    text: '-1'
+                    on_release: root.diminuir2()
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.45
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: 'NÚMERO SORTEADO:'
+            font_size: 60
+            size_hint_y: None
+            height: 177
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            id: label_aviso
+            size_hint_y: None
+            height: 112
+        Label:
+            id: label_resultado
+            font_size: 200
+
+<Sobre>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'INÍCIO'
+                    app_icon: app.icon if app.icon else ''
+                    on_release:
+                        app.root.current = 'menu_principal'
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 80
+            padding: 80
+            Label:
+            Image:
+                size_hint_y: None
+                height: 400
+                source: 'logom.png'
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1, 0.1, 0.1, 0.45
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: 'Criado por Davi Sousa'
+                size_hint_y: None
+                height: 150
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1, 0.1, 0.1, 0.45
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: 'E-mail: desenvolvedordavi47@gmail.com'
+                size_hint_y: None
+                height: 150
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1, 0.1, 0.1, 0.45
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: 'Twitter: @davi4747\nGithub Profile: github.com/davi4747'
+                size_hint_y: None
+                height: 150
+            Label:
