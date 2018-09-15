@@ -15,6 +15,8 @@
         name: 'numeros'
     Sobre:
         name: 'sobre'
+    Grupo:
+        name: 'grupo'
 
 <Main_menu>:
     BoxLayout:
@@ -36,11 +38,17 @@
                 height: 400
                 source: 'logom.png'
             Botaor:
+                cor1: (0.4,0.4,0.4,1)
+                cor2: (0.47,0.47,0.47,1)
                 text: 'NOMES'
                 size_hint_y: None
                 height: 150
-                on_release: app.root.current = 'menu_nomes'
+                on_release:
+                    app.root.get_screen('menu_nomes').ids.participantes.text = '0 PARTICIPANTES:'
+                    app.root.current = 'menu_nomes'
             Botaor:
+                cor1: (0.4,0.4,0.4,1)
+                cor2: (0.47,0.47,0.47,1)
                 text: 'NÚMEROS'
                 size_hint_y: None
                 height: 150
@@ -51,11 +59,15 @@
                     app.root.get_screen('numeros').ids.text2.text = '500'
                     app.root.current = 'numeros'
             Botaor:
+                cor1: (0.4,0.4,0.4,1)
+                cor2: (0.47,0.47,0.47,1)
                 text: 'SOBRE'
                 size_hint_y: None
                 height: 150
                 on_release: app.root.current = 'sobre'
             Botaor:
+                cor1: (0.4,0.4,0.4,1)
+                cor2: (0.47,0.47,0.47,1)
                 text: 'SAIR'
                 size_hint_y: None
                 height: 150
@@ -65,7 +77,7 @@
 <Botaor@ButtonBehavior+Label>:
     canvas.before:
         Color:
-            rgba: self.cor
+            rgba: self.cor1
         Ellipse:
             pos: self.pos
             size: self.height, self.height
@@ -92,10 +104,18 @@
                     title: 'INÍCIO'
                     app_icon: app.icon if app.icon else ''
                     on_release: root.back()
+                ActionButton:
+                    text: 'GRUPOS'
+                    on_release:
+                        root.tipo = 'grupos'
+                        app.root.get_screen('grupo').ids.text2.text = '2'
+                        app.root.get_screen('grupo').ids.quantidade.text = '2'
+                        app.root.get_screen('resultado').grupos()
                 ActionSeparator:
                 ActionButton:
-                    text: 'CONFIRMAR'
+                    text: 'INDIVIDUAL'
                     on_release:
+                        root.tipo = 'individual'
                         app.root.get_screen('resultado').preparar()
         Label:
             canvas.before:
@@ -133,7 +153,7 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            text: 'PARTICIPANTES:'
+            id: participantes
             size_hint_y: None
             height: 100
         ScrollView:
@@ -169,7 +189,7 @@
     Label:
         id: labelp
     Botaor:
-        cor: (0.4,0.1,0.1,1)
+        cor1: (0.4,0.1,0.1,1)
         cor2: (0.47,0.1,0.1,1)
         text: 'Excluir'
         size_hint_x: None
@@ -179,6 +199,9 @@
         on_release:
             app.root.get_screen('menu_nomes').lista_nomes_temp.remove(root.ids.labelp.text)
             app.root.get_screen('menu_nomes').ids.box_participantes.remove_widget(root)
+            q = len(app.root.get_screen('menu_nomes').lista_nomes_temp)
+            aviso = str(q) + ' PARTICIPANTES:'
+            app.root.get_screen('menu_nomes').ids.participantes.text = aviso
 
 <Titulo>:
     size_hint_y: None
@@ -191,7 +214,7 @@
             app.root.get_screen('menu_nomes').titulo = root.ids.labelt.text
             app.root.get_screen('menu_nomes').recolocar()
     Botaor:
-        cor: (0.4,0.1,0.1,1)
+        cor1: (0.4,0.1,0.1,1)
         cor2: (0.47,0.1,0.1,1)
         text: 'Excluir'
         size_hint_x: None
@@ -360,19 +383,55 @@
             height: 112
         ScrollView:
             BoxLayout:
-                canvas.before:
-                    Color:
-                        rgba: 0.1,0.1,0.1,0.73
                 id: box_resultado
-                spacing: 27
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
 
 <Sorteado>:
-    font_size: 57
     size_hint_y: None
-    height: 136
+    height: 206
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: 0.1,0.1,0.1,0.53
+    Label:
+        id: sorteado
+        font_size: 60
+        size_hint_y: None
+        height: 136
+
+<Sorteadog>:
+    size_hint_y: None
+    height: 270
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: 0.1,0.1,0.1,0.53
+    BoxLayout:
+        size_hint_y: None
+        height: 220
+        Label:
+            id: ordem
+            font_size: 60
+            size_hint_y: None
+            height: 220
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: 9
+                id: escolhidos
+                size_hint_y: None
+                height: self.minimum_height
+    Label:
+        canvas:
+            Color:
+                rgba: 0.1,0.1,0.1,0.45
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size_hint_y: None
+        height: 50
 
 <Numeros>:
     BoxLayout:
@@ -409,7 +468,7 @@
                 padding: 76
                 spacing: 20
                 Botaor:
-                    cor: (0.1,0.4,0.1,1)
+                    cor1: (0.1,0.4,0.1,1)
                     cor2: (0.1,0.47,0.1,1)
                     text: '+1'
                     on_release: root.aumentar1()
@@ -418,7 +477,7 @@
                     font_size: 65
                     text: '0'
                 Botaor:
-                    cor: (0.4,0.1,0.1,1)
+                    cor1: (0.4,0.1,0.1,1)
                     cor2: (0.47,0.1,0.1,1)
                     text: '-1'
                     on_release: root.diminuir1()
@@ -429,7 +488,7 @@
                 padding: 76
                 spacing: 20
                 Botaor:
-                    cor: (0.1,0.4,0.1,1)
+                    cor1: (0.1,0.4,0.1,1)
                     cor2: (0.1,0.47,0.1,1)
                     text: '+1'
                     on_release: root.aumentar2()
@@ -438,7 +497,7 @@
                     font_size: 65
                     text: '500'
                 Botaor:
-                    cor: (0.4,0.1,0.1,1)
+                    cor1: (0.4,0.1,0.1,1)
                     cor2: (0.47,0.1,0.1,1)
                     text: '-1'
                     on_release: root.diminuir2()
@@ -524,3 +583,81 @@
                 size_hint_y: None
                 height: 150
             Label:
+
+<Grupo>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.4,0.4,0.4,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'wl.png'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'VOLTAR'
+                    app_icon: app.icon if app.icon else ''
+                    on_release:
+                        app.root.current = 'menu_nomes'
+                ActionSeparator:
+                ActionButton:
+                    text: 'CONFIRMAR'
+                    on_release:
+                        app.root.get_screen('grupo').quantidade = root.ids.quantidade.text
+                        app.root.get_screen('resultado').sortearg()
+        BoxLayout:
+            size_hint_y: None
+            height: 160
+            canvas.before:
+                Color:
+                    rgba: 0.19, 0.19, 0.19, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: 'Quantidade:'
+                font_size: 60
+            Label:
+                id: quantidade
+                text: '2'
+                font_size: 60
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: 'Digite a quantidade de integrantes do grupo:'
+            size_hint_y: None
+            height: 100
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint_y: None
+            height: 200
+            padding: 50
+            spacing: 20
+            TextInput:
+                id: text2
+                text: '2'
+                font_size: 70
+            Button:
+                text: 'OK'
+                size_hint_x: None
+                width: 90
+                on_release:
+                    root.verificar()
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 0.1,0.1,0.1,0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos

@@ -18,6 +18,7 @@ class Gerenciador(ScreenManager):
     pass
 
 class Main_menu(Screen):
+
     def confirmacao(self):
         box = BoxLayout(orientation='vertical', spacing=30)
         atencao = Image(source='att.png')
@@ -33,19 +34,20 @@ class Main_menu(Screen):
 
 class Botaor(ButtonBehavior, Label):
 
-    cor = ListProperty([0.1, 0.1, 0.1, 1])
+    cor1 = ListProperty([0.1, 0.1, 0.1, 1])
     cor2 = ListProperty([0.4, 0.4, 0.4, 1])
 
     def on_press(self):
-        self.cor, self.cor2 = self.cor2, self.cor
+        self.cor1, self.cor2 = self.cor2, self.cor1
 
     def on_release(self):
-        self.cor, self.cor2 = self.cor2, self.cor
+        self.cor1, self.cor2 = self.cor2, self.cor1
 
 class Nomes(Screen):
     def __init__(self, **kwargs):
         super(Nomes, self).__init__()
         self.titulo = ''
+        self.tipo = ''
         arquivo = open('lists.txt', 'r')
         arquivo2 = arquivo.read()
         if arquivo2 == '':
@@ -66,6 +68,7 @@ class Nomes(Screen):
         Window.bind(on_keyboard=self.voltar)
 
     def back(self):
+        App.get_running_app().root.get_screen('menu_nomes').ids.participantes.text = '0 PARTICIPANTES:'
         self.ids.box_participantes.clear_widgets()
         self.lista_nomes_temp = []
         App.get_running_app().root.current = 'menu_principal'
@@ -87,6 +90,9 @@ class Nomes(Screen):
             self.lista_nomes_temp.append(texto)
             self.ids.box_participantes.add_widget(Participante(texto))
             self.ids.text1.text = ''
+            q = len(self.lista_nomes_temp)
+            aviso = str(q) + ' PARTICIPANTES:'
+            App.get_running_app().root.get_screen('menu_nomes').ids.participantes.text = aviso
 
     def carregar(self):
         arquivo = open('lists.txt', 'r')
@@ -106,6 +112,7 @@ class Nomes(Screen):
             arquivo.close()
         else:
             self.ids.box_participantes.clear_widgets()
+            App.get_running_app().root.get_screen('menu_nomes').ids.participantes.text = '0 PARTICIPANTES:'
             self.lista_nomes_temp = []
             App.get_running_app().root.current = 'load'
             self.lista_titulos = []
@@ -160,6 +167,7 @@ class Nomes(Screen):
         else:
             App.get_running_app().root.get_screen('edit').lista_temp = self.lista_nomes_temp
             App.get_running_app().root.get_screen('menu_nomes').ids.box_participantes.clear_widgets()
+            App.get_running_app().root.get_screen('menu_nomes').ids.participantes.text = '0 PARTICIPANTES:'
             self.lista_nomes_temp = []
             App.get_running_app().root.current = 'edit'
 
@@ -217,6 +225,7 @@ class Resultado(Screen):
         super(Resultado, self).__init__()
         self.lista_temp = []
         self.lista_perm = None
+        self.quantidade = 0
 
     def on_pre_enter(self, *args):
         Window.bind(on_keyboard=self.voltar)
@@ -254,7 +263,49 @@ class Resultado(Screen):
             App.get_running_app().root.current = 'resultado'
             self.sortear()
 
+    def grupos(self):
+        if len(App.get_running_app().root.get_screen('menu_nomes').lista_nomes_temp) <= 2:
+            box = BoxLayout(orientation='vertical', spacing=15, padding=17)
+            pop = Popup(title='CONFIRMAR SORTEIO', content=box, size_hint=(None, None), size=(800, 500))
+            atencao = Image(source='att.png')
+            box2 = BoxLayout(orientation='vertical', spacing=13, padding=10)
+            aviso = Label(text='Adicione ao menos 3 participantes!')
+            box2.add_widget(atencao)
+            box2.add_widget(aviso)
+            botao = Botaor(text='OK', on_release=pop.dismiss)
+            box2.add_widget(botao)
+            box.add_widget(box2)
+            pop.open()
+        else:
+            App.get_running_app().root.get_screen('menu_nomes').ids.box_participantes.clear_widgets()
+            self.lista_perm = App.get_running_app().root.get_screen('menu_nomes').lista_nomes_temp
+            App.get_running_app().root.get_screen('menu_nomes').lista_nomes_temp = []
+            App.get_running_app().root.current = 'grupo'
+
     def sortear(self):
+        if App.get_running_app().root.get_screen('menu_nomes').tipo == 'individual':
+            for c in self.lista_perm:
+                self.lista_temp.append(c)
+            self.ids.box_resultado.clear_widgets()
+            data = str(date.today())
+            hor = datetime.today()
+            calendario = {'01':'Janeiro', '02':'Fevereiro', '03':'Março', '04':'Abril', '05':'Maio', '06':'Junho', '07':'Julho',
+                          '08':'Agosto', '09':'Setembro', '10':'Outubro', '11':'Novembro', '12':'Dezembro'}
+            mensagem = 'Realizado em: ' + data[8:] + ' de ' + calendario[data[5:7]] + ' de ' + data[0:4] + ' às ' + \
+                       '{:0>2}'.format(str(hor.hour)) + ':' + '{:0>2}'.format(str(hor.minute))
+            App.get_running_app().root.get_screen('resultado').ids.label_top.text = mensagem
+            cont = 0
+            while not len(self.lista_temp) == 0:
+                esc = choice(self.lista_temp)
+                cont += 1
+                colocado = str(cont) + ': ' + esc
+                self.ids.box_resultado.add_widget(Sorteado(colocado))
+                self.lista_temp.remove(esc)
+            self.lista_temp = []
+        else:
+            self.sortearg()
+
+    def sortearg(self):
         for c in self.lista_perm:
             self.lista_temp.append(c)
         self.ids.box_resultado.clear_widgets()
@@ -266,13 +317,25 @@ class Resultado(Screen):
                    '{:0>2}'.format(str(hor.hour)) + ':' + '{:0>2}'.format(str(hor.minute))
         App.get_running_app().root.get_screen('resultado').ids.label_top.text = mensagem
         cont = 0
-        print(len(self.lista_temp))
         while not len(self.lista_temp) == 0:
-            esc = choice(self.lista_temp)
-            cont += 1
-            colocado = str(cont) + ': ' + esc
-            self.ids.box_resultado.add_widget(Sorteado(colocado))
-            self.lista_temp.remove(esc)
+            if len(self.lista_temp) < int(App.get_running_app().root.get_screen('grupo').quantidade):
+                restante = []
+                while len(self.lista_temp) != 0:
+                    for t in self.lista_temp:
+                        restante.append(t)
+                        self.lista_temp.remove(t)
+                ordem = 'Grupo Restante:'
+                self.ids.box_resultado.add_widget(Sorteadog(ordem, restante))
+            else:
+                esc = []
+                for c in range(0, int(App.get_running_app().root.get_screen('grupo').quantidade)):
+                    item = choice(self.lista_temp)
+                    esc.append(item)
+                    self.lista_temp.remove(item)
+                cont += 1
+                ordem = 'Grupo ' + str(cont) + ':'
+                self.ids.box_resultado.add_widget(Sorteadog(ordem, esc))
+        App.get_running_app().root.current = 'resultado'
         self.lista_temp = []
 
 class Titulo(BoxLayout):
@@ -280,10 +343,17 @@ class Titulo(BoxLayout):
         super(Titulo, self).__init__()
         self.ids.labelt.text = titulo
 
-class Sorteado(Label):
+class Sorteado(BoxLayout):
     def __init__(self, texto, **kwargs):
         super(Sorteado, self).__init__()
-        self.text = texto
+        self.ids.sorteado.text = texto
+
+class Sorteadog(BoxLayout):
+    def __init__(self, ordem, escolhidos, **kwargs):
+        super(Sorteadog, self).__init__()
+        self.ids.ordem.text = ordem
+        for c in escolhidos:
+            self.ids.escolhidos.add_widget(Label(text=c, font_size=47, size_hint_y=None, height=55))
 
 class Participante(BoxLayout):
     def __init__(self, texto, **kwargs):
@@ -374,10 +444,6 @@ class Numeros(Screen):
         except:
             self.avisar()
 
-class Teste(Label):
-    def lol(self):
-        pass
-
 class Sobre(Screen):
     def on_pre_enter(self, *args):
         Window.bind(on_keyboard=self.voltar)
@@ -389,6 +455,48 @@ class Sobre(Screen):
 
     def on_pre_leave(self, *args):
         Window.unbind(on_keyboard=self.voltar)
+
+class Grupo(Screen):
+    def __init__(self, **kwargs):
+        super(Grupo, self).__init__()
+        self.quantidade = ''
+
+    def on_pre_enter(self, *args):
+        Window.bind(on_keyboard=self.voltar)
+
+    def voltar(self, window, key, *args):
+        if key == 27:
+            App.get_running_app().root.current = 'menu_nomes'
+            return True
+
+    def on_pre_leave(self, *args):
+        Window.unbind(on_keyboard=self.voltar)
+
+    def verificar(self):
+        try:
+            num = int(self.ids.text2.text.strip())
+            for c in App.get_running_app().root.get_screen('resultado').lista_perm:
+                App.get_running_app().root.get_screen('resultado').lista_temp.append(c)
+            if num >= len(App.get_running_app().root.get_screen('resultado').lista_temp):
+                box = BoxLayout(orientation='vertical', spacing=15, padding=17)
+                pop = Popup(title='VERIFICAR NÚMEROS', content=box, size_hint=(None, None), size=(800, 560))
+                atencao = Image(source='att.png')
+                box2 = BoxLayout(orientation='vertical', spacing=13, padding=10)
+                aviso = Label(text='Digite um número menor que\na quantidade de participantes!')
+                box2.add_widget(atencao)
+                box2.add_widget(aviso)
+                botao = Botaor(text='OK', on_release=pop.dismiss)
+                box2.add_widget(botao)
+                box.add_widget(box2)
+                pop.open()
+                App.get_running_app().root.get_screen('resultado').lista_temp = []
+            else:
+                self.ids.quantidade.text = str(num)
+                self.quantidade = str(num)
+                self.ids.text2.text = self.ids.quantidade.text
+                App.get_running_app().root.get_screen('resultado').lista_temp = []
+        except:
+            App.get_running_app().root.get_screen('numeros').avisar()
 
 class Sorteio(App):
     def build(self):
