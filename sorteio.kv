@@ -21,7 +21,7 @@
 <Main_menu>:
     BoxLayout:
         orientation: 'vertical'
-        padding: 80
+        padding: dp(9)
         canvas:
             Color:
                 rgba: 0.4,0.4,0.4,1
@@ -31,18 +31,18 @@
                 source: 'wl.png'
         BoxLayout:
             orientation: 'vertical'
-            spacing: 80
+            spacing: dp(20)
             Label:
             Image:
                 size_hint_y: None
-                height: 400
+                height: dp(100)
                 source: 'logom.png'
             Botaor:
                 cor1: (0.4,0.4,0.4,1)
                 cor2: (0.47,0.47,0.47,1)
                 text: 'NOMES'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
                 on_release:
                     app.root.get_screen('menu_nomes').ids.participantes.text = '0 PARTICIPANTES:'
                     app.root.current = 'menu_nomes'
@@ -51,26 +51,26 @@
                 cor2: (0.47,0.47,0.47,1)
                 text: 'NÚMEROS'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
                 on_release:
                     app.root.get_screen('numeros').ids.label_aviso.text = ''
                     app.root.get_screen('numeros').ids.label_resultado.text = ''
-                    app.root.get_screen('numeros').ids.text1.text = '0'
-                    app.root.get_screen('numeros').ids.text2.text = '500'
+                    app.root.get_screen('numeros').ids.text1.text = ''
+                    app.root.get_screen('numeros').ids.text2.text = ''
                     app.root.current = 'numeros'
             Botaor:
                 cor1: (0.4,0.4,0.4,1)
                 cor2: (0.47,0.47,0.47,1)
                 text: 'SOBRE'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
                 on_release: app.root.current = 'sobre'
             Botaor:
                 cor1: (0.4,0.4,0.4,1)
                 cor2: (0.47,0.47,0.47,1)
                 text: 'SAIR'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
                 on_release: root.confirmacao()
             Label:
 
@@ -125,7 +125,7 @@
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 200
+            height: dp(50)
             text: 'Digite e confirme os participantes!'
         BoxLayout:
             canvas.before:
@@ -135,16 +135,16 @@
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 200
-            padding: 50
-            spacing: 20
+            height: dp(58)
+            padding: dp(10)
+            spacing: dp(5)
             TextInput:
                 id: text1
-                font_size: 70
+                font_size: dp(25)
             Button:
                 text: 'ADICIONAR'
                 size_hint_x: None
-                width: 280
+                width: dp(80)
                 on_release: app.root.get_screen('menu_nomes').confirmar_nome()
         Label:
             canvas.before:
@@ -155,11 +155,11 @@
                     pos: self.pos
             id: participantes
             size_hint_y: None
-            height: 100
+            height: dp(40)
         ScrollView:
             BoxLayout:
                 id: box_participantes
-                spacing: 27
+                spacing: dp(5)
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
@@ -171,9 +171,9 @@
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 200
-            padding: 50
-            spacing: 20
+            height: dp(60)
+            padding: dp(14)
+            spacing: dp(5)
             Button:
                 text: 'Carregar Lista'
                 on_release: root.carregar()
@@ -184,8 +184,8 @@
 
 <Participante>:
     size_hint_y: None
-    height: 136
-    padding: 32
+    height: dp(45)
+    padding: dp(3)
     Label:
         id: labelp
     Botaor:
@@ -194,8 +194,8 @@
         text: 'Excluir'
         size_hint_x: None
         size_hint_y: None
-        height: 96
-        width: 190
+        height: dp(42)
+        width: dp(66)
         on_release:
             app.root.get_screen('menu_nomes').lista_nomes_temp.remove(root.ids.labelp.text)
             app.root.get_screen('menu_nomes').ids.box_participantes.remove_widget(root)
@@ -205,11 +205,12 @@
 
 <Titulo>:
     size_hint_y: None
-    height: 200
-    padding: 32
-    spacing: 30
+    height: dp(55)
+    padding: dp(6)
+    spacing: dp(6)
     Botaor:
         id: labelt
+        font_size: dp(25)
         on_release:
             app.root.get_screen('menu_nomes').titulo = root.ids.labelt.text
             app.root.get_screen('menu_nomes').recolocar()
@@ -218,7 +219,7 @@
         cor2: (0.47,0.1,0.1,1)
         text: 'Excluir'
         size_hint_x: None
-        width: 190
+        width: dp(56)
         on_release:
             app.root.get_screen('menu_nomes').removert(root.ids.labelt.text)
             app.root.get_screen('load').ids.box_titulos.remove_widget(root)
@@ -249,13 +250,14 @@
                     size: self.size
                     pos: self.pos
             text: 'LISTAS SALVAS:'
+            font_size: dp(25)
             size_hint_y: None
-            height: 100
+            height: dp(50)
         ScrollView:
             BoxLayout:
                 id: box_titulos
-                padding: 8
-                spacing: 20
+                padding: dp(2)
+                spacing: dp(7)
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
@@ -283,7 +285,7 @@
                         app.root.get_screen('menu_nomes').salvar()
         BoxLayout:
             size_hint_y: None
-            height: 160
+            height: dp(50)
             canvas.before:
                 Color:
                     rgba: 0.19, 0.19, 0.19, 0.6
@@ -292,11 +294,11 @@
                     pos: self.pos
             Label:
                 text: 'Título:'
-                font_size: 60
+                font_size: dp(25)
             Label:
                 id: label_titulo
                 text: '---'
-                font_size: 60
+                font_size: dp(25)
         Label:
             canvas.before:
                 Color:
@@ -305,8 +307,9 @@
                     size: self.size
                     pos: self.pos
             text: 'ADICIONAR NOME:'
+            font_size: dp(25)
             size_hint_y: None
-            height: 100
+            height: dp(47)
         BoxLayout:
             canvas.before:
                 Color:
@@ -315,16 +318,16 @@
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 200
-            padding: 50
-            spacing: 20
+            height: dp(50)
+            padding: dp(6)
+            spacing: dp(3)
             TextInput:
                 id: text2
-                font_size: 70
+                font_size: dp(25)
             Button:
                 text: 'OK'
                 size_hint_x: None
-                width: 90
+                width: dp(52)
                 on_release:
                     root.ids.label_titulo.text = root.ids.text2.text.strip()
                     root.titulo = root.ids.text2.text.strip()
@@ -368,9 +371,9 @@
                     size: self.size
                     pos: self.pos
             text: 'RESULTADO:'
-            font_size: 60
+            font_size: dp(25)
             size_hint_y: None
-            height: 177
+            height: dp(55)
         Label:
             canvas.before:
                 Color:
@@ -379,8 +382,9 @@
                     size: self.size
                     pos: self.pos
             id: label_top
+            font_size: dp(15)
             size_hint_y: None
-            height: 112
+            height: dp(45)
         ScrollView:
             BoxLayout:
                 id: box_resultado
@@ -390,36 +394,36 @@
 
 <Sorteado>:
     size_hint_y: None
-    height: 206
+    height: dp(64)
     orientation: 'vertical'
     canvas.before:
         Color:
             rgba: 0.1,0.1,0.1,0.53
     Label:
         id: sorteado
-        font_size: 60
+        font_size: dp(30)
         size_hint_y: None
-        height: 136
+        height: dp(55)
 
 <Sorteadog>:
     size_hint_y: None
-    height: 270
+    height: dp(110)
     orientation: 'vertical'
     canvas.before:
         Color:
             rgba: 0.1,0.1,0.1,0.53
     BoxLayout:
         size_hint_y: None
-        height: 220
+        height: dp(85)
         Label:
             id: ordem
-            font_size: 60
+            font_size: dp(23)
             size_hint_y: None
-            height: 220
+            height: dp(85)
         ScrollView:
             BoxLayout:
                 orientation: 'vertical'
-                spacing: 9
+                spacing: dp(3)
                 id: escolhidos
                 size_hint_y: None
                 height: self.minimum_height
@@ -431,7 +435,7 @@
                 pos: self.pos
                 size: self.size
         size_hint_y: None
-        height: 50
+        height: dp(17)
 
 <Numeros>:
     BoxLayout:
@@ -457,61 +461,134 @@
         BoxLayout:
             canvas.before:
                 Color:
-                    rgba: 0.1, 0.1, 0.1, 0.45
+                    rgba: 0.1,0.1,0.1,0.8
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            size_hint_y: None
+            height: dp(55)
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                id: number1
+                text: '0'
+                font_size: dp(25)
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                text: 'ATÉ'
+                font_size: dp(25)
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                id: number2
+                text: '500'
+                font_size: dp(25)
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 0.8
                 Rectangle:
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 450
+            height: dp(90)
             BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
                 orientation: 'vertical'
-                padding: 76
-                spacing: 20
-                Botaor:
-                    cor1: (0.1,0.4,0.1,1)
-                    cor2: (0.1,0.47,0.1,1)
-                    text: '+1'
-                    on_release: root.aumentar1()
+                padding: dp(6)
+                spacing: dp(6)
+                Label:
+                    text: '1° Número:'
                 TextInput:
                     id: text1
-                    font_size: 65
-                    text: '0'
-                Botaor:
-                    cor1: (0.4,0.1,0.1,1)
-                    cor2: (0.47,0.1,0.1,1)
-                    text: '-1'
-                    on_release: root.diminuir1()
-            Label:
-                text: 'ATÉ'
+                    font_size: dp(25)
+                    text: ''
             BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
                 orientation: 'vertical'
-                padding: 76
-                spacing: 20
-                Botaor:
-                    cor1: (0.1,0.4,0.1,1)
-                    cor2: (0.1,0.47,0.1,1)
-                    text: '+1'
-                    on_release: root.aumentar2()
+                padding: dp(2.7)
+                size_hint_x: None
+                spacing: dp(6)
+                width: dp(52)
+                Label:
+                Button:
+                    text: 'OK'
+                    on_release: root.ok1()
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                size_hint_x: None
+                width: dp(13)
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                orientation: 'vertical'
+                padding: dp(6)
+                spacing: dp(6)
+                Label:
+                    text: '2° Número:'
                 TextInput:
                     id: text2
-                    font_size: 65
-                    text: '500'
-                Botaor:
-                    cor1: (0.4,0.1,0.1,1)
-                    cor2: (0.47,0.1,0.1,1)
-                    text: '-1'
-                    on_release: root.diminuir2()
+                    font_size: dp(25)
+                    text: ''
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: 0.1,0.1,0.1,0.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                orientation: 'vertical'
+                size_hint_x: None
+                width: dp(52)
+                padding: dp(2.7)
+                spacing: dp(6)
+                Label:
+                Button:
+                    text: 'OK'
+                    on_release: root.ok2()
         Label:
             canvas.before:
                 Color:
-                    rgba: 0.1, 0.1, 0.1, 0.45
+                    rgba: 0.1, 0.1, 0.1, 0.8
                 Rectangle:
                     size: self.size
                     pos: self.pos
             text: 'NÚMERO SORTEADO:'
-            font_size: 60
+            font_size: dp(20)
             size_hint_y: None
-            height: 177
+            height: dp(55)
         Label:
             canvas.before:
                 Color:
@@ -520,11 +597,12 @@
                     size: self.size
                     pos: self.pos
             id: label_aviso
+            font_size: dp(13)
             size_hint_y: None
-            height: 112
+            height: dp(37)
         Label:
             id: label_resultado
-            font_size: 200
+            font_size: dp(64)
 
 <Sobre>:
     BoxLayout:
@@ -545,12 +623,12 @@
                         app.root.current = 'menu_principal'
         BoxLayout:
             orientation: 'vertical'
-            spacing: 80
-            padding: 80
+            spacing: dp(20)
+            padding: dp(6)
             Label:
             Image:
                 size_hint_y: None
-                height: 400
+                height: dp(100)
                 source: 'logom.png'
             Label:
                 canvas.before:
@@ -561,7 +639,7 @@
                         pos: self.pos
                 text: 'Criado por Davi Sousa'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
             Label:
                 canvas.before:
                     Color:
@@ -569,9 +647,9 @@
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                text: 'E-mail: desenvolvedordavi47@gmail.com'
+                text: 'E-mail: desenvolvedordavi47@gmail.com\nTesters: Samuel Brito | Miguel Ângelo'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
             Label:
                 canvas.before:
                     Color:
@@ -581,7 +659,7 @@
                         pos: self.pos
                 text: 'Twitter: @davi4747\nGithub Profile: github.com/davi4747'
                 size_hint_y: None
-                height: 150
+                height: dp(50)
             Label:
 
 <Grupo>:
@@ -609,7 +687,7 @@
                         app.root.get_screen('resultado').sortearg()
         BoxLayout:
             size_hint_y: None
-            height: 160
+            height: dp(55)
             canvas.before:
                 Color:
                     rgba: 0.19, 0.19, 0.19, 0.6
@@ -618,11 +696,11 @@
                     pos: self.pos
             Label:
                 text: 'Quantidade:'
-                font_size: 60
+                font_size: dp(25)
             Label:
                 id: quantidade
                 text: '2'
-                font_size: 60
+                font_size: dp(25)
         Label:
             canvas.before:
                 Color:
@@ -631,8 +709,9 @@
                     size: self.size
                     pos: self.pos
             text: 'Digite a quantidade de integrantes do grupo:'
+            font_size: dp(15)
             size_hint_y: None
-            height: 100
+            height: dp(55)
         BoxLayout:
             canvas.before:
                 Color:
@@ -641,19 +720,23 @@
                     size: self.size
                     pos: self.pos
             size_hint_y: None
-            height: 200
-            padding: 50
-            spacing: 20
+            height: dp(50)
+            padding: dp(9)
+            spacing: dp(3)
+            Label:
             TextInput:
+                size_hint_x: None
+                width: dp(115)
                 id: text2
                 text: '2'
-                font_size: 70
+                font_size: dp(25)
             Button:
                 text: 'OK'
                 size_hint_x: None
-                width: 90
+                width: dp(56)
                 on_release:
                     root.verificar()
+            Label:
         Label:
             canvas.before:
                 Color:
