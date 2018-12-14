@@ -1,4 +1,4 @@
-# Made by Davi Sousa, Twitter: @davi4747, Instagram: @davisousa_80, Github Profile: github.com/davi4747
+# Made by Davi Sousa, Github Profile: github.com/davig_sousa
 
 <Gerenciador>:
     Main_menu:
@@ -49,7 +49,7 @@
             Botaor:
                 cor1: (0.4,0.4,0.4,1)
                 cor2: (0.47,0.47,0.47,1)
-                text: 'NÚMEROS'
+                text: u'N\u00daMEROS'
                 size_hint_y: None
                 height: dp(50)
                 on_release:
@@ -101,7 +101,7 @@
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title: 'INÍCIO'
+                    title: u'IN\u00cdCIO'
                     app_icon: app.icon if app.icon else ''
                     on_release: root.back()
                 ActionButton:
@@ -142,7 +142,7 @@
                 id: text1
                 font_size: dp(25)
             Button:
-                text: 'ADICIONAR'
+                text: 'OK'
                 size_hint_x: None
                 width: dp(80)
                 on_release: app.root.get_screen('menu_nomes').confirmar_nome()
@@ -293,7 +293,7 @@
                     size: self.size
                     pos: self.pos
             Label:
-                text: 'Título:'
+                text: u'T\u00edtulo:'
                 font_size: dp(25)
             Label:
                 id: label_titulo
@@ -353,7 +353,7 @@
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title: 'INÍCIO'
+                    title: u'IN\u00cdCIO'
                     app_icon: app.icon if app.icon else ''
                     on_release:
                         root.ids.box_resultado.clear_widgets()
@@ -450,7 +450,7 @@
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title: 'INÍCIO'
+                    title: u'IN\u00cdCIO'
                     app_icon: app.icon if app.icon else ''
                     on_release:
                         app.root.current = 'menu_principal'
@@ -470,7 +470,7 @@
             Label:
                 canvas.before:
                     Color:
-                        rgba: 0.1,0.1,0.1,0.8
+                        rgba: 0.1,0.25,0.1,0.8
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -480,16 +480,16 @@
             Label:
                 canvas.before:
                     Color:
-                        rgba: 0.1,0.1,0.1,0.8
+                        rgba: 0.1,0.15,0.1,0.8
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                text: 'ATÉ'
+                text: u'AT\u00c9'
                 font_size: dp(25)
             Label:
                 canvas.before:
                     Color:
-                        rgba: 0.1,0.1,0.1,0.8
+                        rgba: 0.1,0.25,0.1,0.8
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -516,7 +516,7 @@
                 padding: dp(6)
                 spacing: dp(6)
                 Label:
-                    text: '1° Número:'
+                    text: u'1\u00b0 N\u00famero:'
                 TextInput:
                     id: text1
                     font_size: dp(25)
@@ -557,7 +557,7 @@
                 padding: dp(6)
                 spacing: dp(6)
                 Label:
-                    text: '2° Número:'
+                    text: u'2\u00b0 N\u00famero:'
                 TextInput:
                     id: text2
                     font_size: dp(25)
@@ -585,7 +585,7 @@
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            text: 'NÚMERO SORTEADO:'
+            text: u'N\u00daMERO SORTEADO:'
             font_size: dp(20)
             size_hint_y: None
             height: dp(55)
@@ -617,7 +617,7 @@
         ActionBar:
             ActionView:
                 ActionPrevious:
-                    title: 'INÍCIO'
+                    title: u'IN\u00cdCIO'
                     app_icon: app.icon if app.icon else ''
                     on_release:
                         app.root.current = 'menu_principal'
@@ -647,7 +647,7 @@
                     Rectangle:
                         size: self.size
                         pos: self.pos
-                text: 'E-mail: desenvolvedordavi47@gmail.com\nTesters: Samuel Brito | Miguel Ângelo'
+                text: 'E-mail: desenvolvedordavi47@gmail.com\nTesters: Samuel Brito | Miguel Angelo'
                 size_hint_y: None
                 height: dp(50)
             Label:
