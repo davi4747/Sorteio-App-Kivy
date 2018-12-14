@@ -11,6 +11,7 @@ from kivy.metrics import dp
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
 from kivy.core.window import Window
+from functools import wraps
 from random import choice
 from datetime import date, datetime
 import json
@@ -35,9 +36,9 @@ class Main_menu(Screen):
         box = BoxLayout(orientation='vertical', spacing=dp(3))
         atencao = Image(source='att.png')
         botoes = BoxLayout(padding=dp(4), spacing=dp(3))
-        pop = Popup(title='Você quer mesmo sair?', content=box, size_hint=(None, None), size=(dp(250), dp(180)))
+        pop = Popup(title=u'Voc\u00ea quer mesmo sair?', content=box, size_hint=(None, None), size=(dp(250), dp(180)))
         sim = Botaor(text='SIM', on_release=App.get_running_app().stop)
-        nao = Botaor(text='NÃO', on_release=pop.dismiss)
+        nao = Botaor(text=u'N\u00c3O', on_release=pop.dismiss)
         botoes.add_widget(sim)
         botoes.add_widget(nao)
         box.add_widget(atencao)
@@ -114,7 +115,7 @@ class Nomes(Screen):
             pop = Popup(title='Listas Salvas', content=box, size_hint=(None, None), size=(dp(250), dp(180)))
             atencao = Image(source='att.png')
             box2 = BoxLayout(orientation='vertical', spacing=dp(3), padding=dp(5))
-            aviso = Label(text='Não há lista salva!')
+            aviso = Label(text=u'N\u00e3o há lista salva!')
             box2.add_widget(atencao)
             box2.add_widget(aviso)
             botao = Botaor(text='OK', on_release=pop.dismiss)
@@ -304,7 +305,7 @@ class Resultado(Screen):
             self.ids.box_resultado.clear_widgets()
             data = str(date.today())
             hor = datetime.today()
-            calendario = {'01':'Janeiro', '02':'Fevereiro', '03':'Março', '04':'Abril', '05':'Maio', '06':'Junho', '07':'Julho',
+            calendario = {'01':'Janeiro', '02':'Fevereiro', '03':u'Mar\u00e7o', '04':'Abril', '05':'Maio', '06':'Junho', '07':'Julho',
                           '08':'Agosto', '09':'Setembro', '10':'Outubro', '11':'Novembro', '12':'Dezembro'}
             mensagem = 'Realizado em: ' + data[8:] + ' de ' + calendario[data[5:7]] + ' de ' + data[0:4] + ' às ' + \
                        '{:0>2}'.format(str(hor.hour)) + ':' + '{:0>2}'.format(str(hor.minute))
@@ -326,7 +327,7 @@ class Resultado(Screen):
         self.ids.box_resultado.clear_widgets()
         data = str(date.today())
         hor = datetime.today()
-        calendario = {'01':'Janeiro', '02':'Fevereiro', '03':'Março', '04':'Abril', '05':'Maio', '06':'Junho', '07':'Julho',
+        calendario = {'01':'Janeiro', '02':'Fevereiro', '03':u'Mar\u00e7o', '04':'Abril', '05':'Maio', '06':'Junho', '07':'Julho',
                       '08':'Agosto', '09':'Setembro', '10':'Outubro', '11':'Novembro', '12':'Dezembro'}
         mensagem = 'Realizado em: ' + data[8:] + ' de ' + calendario[data[5:7]] + ' de ' + data[0:4] + ' às ' + \
                    '{:0>2}'.format(str(hor.hour)) + ':' + '{:0>2}'.format(str(hor.minute))
@@ -353,4 +354,149 @@ class Resultado(Screen):
         App.get_running_app().root.current = 'resultado'
         self.lista_temp = []
 
-# And a lot of more lines of code.
+class Titulo(BoxLayout):
+    def __init__(self, titulo, **kwargs):
+        super(Titulo, self).__init__()
+        self.ids.labelt.text = titulo
+
+class Sorteado(BoxLayout):
+    def __init__(self, texto, **kwargs):
+        super(Sorteado, self).__init__()
+        self.ids.sorteado.text = texto
+
+class Sorteadog(BoxLayout):
+    def __init__(self, ordem, escolhidos, **kwargs):
+        super(Sorteadog, self).__init__()
+        self.ids.ordem.text = ordem
+        for c in escolhidos:
+            self.ids.escolhidos.add_widget(Label(text=c, font_size=dp(18), size_hint_y=None, height=dp(28)))
+
+class Participante(BoxLayout):
+    def __init__(self, texto, **kwargs):
+        super(Participante, self).__init__()
+        self.ids.labelp.text = texto
+
+class Numeros(Screen):
+
+    def on_pre_enter(self, *args):
+        Window.bind(on_keyboard=self.voltar)
+
+    def voltar(self, window, key, *args):
+        if key == 27:
+            App.get_running_app().root.current = 'menu_principal'
+            return True
+
+    def on_pre_leave(self, *args):
+        Window.unbind(on_keyboard=self.voltar)
+
+    def ok1(self):
+        self.ids.number1.text = self.ids.text1.text.strip()
+        self.ids.text1.text = ''
+
+    def ok2(self):
+        self.ids.number2.text = self.ids.text2.text.strip()
+        self.ids.text2.text = ''
+
+    def avisar(self):
+        box = BoxLayout(orientation='vertical', spacing=dp(4), padding=dp(6))
+        pop = Popup(title=u'VERIFICAR N\u00daMEROS', content=box, size_hint=(None, None), size=(dp(250), dp(180)))
+        atencao = Image(source='att.png')
+        box2 = BoxLayout(orientation='vertical', spacing=dp(3), padding=dp(5))
+        aviso = Label(text=u'Digite apenas n\u00fameros!')
+        box2.add_widget(atencao)
+        box2.add_widget(aviso)
+        botao = Botaor(text='OK', on_release=pop.dismiss)
+        box2.add_widget(botao)
+        box.add_widget(box2)
+        pop.open()
+
+    def sortear(self):
+        try:
+            numb1 = int(self.ids.number1.text.strip())
+            numb2 = int(self.ids.number2.text.strip())
+            if numb2 <= numb1:
+                box = BoxLayout(orientation='vertical', spacing=dp(4), padding=dp(6))
+                pop = Popup(title=u'VERIFICAR N\u00daMEROS', content=box, size_hint=(None, None), size=(dp(250), dp(180)))
+                atencao = Image(source='att.png')
+                box2 = BoxLayout(orientation='vertical', spacing=dp(3), padding=dp(5))
+                aviso = Label(text='O segundo deve ser maior!')
+                box2.add_widget(atencao)
+                box2.add_widget(aviso)
+                botao = Botaor(text='OK', on_release=pop.dismiss)
+                box2.add_widget(botao)
+                box.add_widget(box2)
+                pop.open()
+            else:
+                data = str(date.today())
+                hor = datetime.today()
+                calendario = {'01': 'Janeiro', '02': 'Fevereiro', '03': u'Mar\u00e7o', '04': 'Abril', '05': 'Maio', '06': 'Junho',
+                              '07': 'Julho', '08': 'Agosto', '09': 'Setembro', '10': 'Outubro',
+                              '11': 'Novembro', '12': 'Dezembro'}
+                mensagem = 'Realizado em: ' + data[8:] + ' de ' + calendario[data[5:7]] + ' de ' + data[0:4] + ' às ' + '{:0>2}'.format(str(
+                    hor.hour)) + ':' + '{:0>2}'.format(str(hor.minute))
+                self.ids.label_aviso.text = mensagem
+                resultado = choice(range(numb1, numb2 + 1))
+                self.ids.label_resultado.text = str(resultado)
+        except:
+            self.avisar()
+
+class Sobre(Screen):
+    def on_pre_enter(self, *args):
+        Window.bind(on_keyboard=self.voltar)
+
+    def voltar(self, window, key, *args):
+        if key == 27:
+            App.get_running_app().root.current = 'menu_principal'
+            return True
+
+    def on_pre_leave(self, *args):
+        Window.unbind(on_keyboard=self.voltar)
+
+class Grupo(Screen):
+    def __init__(self, **kwargs):
+        super(Grupo, self).__init__()
+        self.quantidade = ''
+
+    def on_pre_enter(self, *args):
+        Window.bind(on_keyboard=self.voltar)
+
+    def voltar(self, window, key, *args):
+        if key == 27:
+            App.get_running_app().root.current = 'menu_nomes'
+            return True
+
+    def on_pre_leave(self, *args):
+        Window.unbind(on_keyboard=self.voltar)
+
+    def verificar(self):
+        try:
+            num = int(self.ids.text2.text.strip())
+            for c in App.get_running_app().root.get_screen('resultado').lista_perm:
+                App.get_running_app().root.get_screen('resultado').lista_temp.append(c)
+            if num >= len(App.get_running_app().root.get_screen('resultado').lista_temp):
+                box = BoxLayout(orientation='vertical', spacing=dp(4), padding=dp(6))
+                pop = Popup(title=u'VERIFICAR N\u00daMEROS', content=box, size_hint=(None, None), size=(dp(250), dp(180)))
+                atencao = Image(source='att.png')
+                box2 = BoxLayout(orientation='vertical', spacing=dp(3), padding=dp(5))
+                aviso = Label(text=u'Digite um n\u00famero menor que\na quantidade de participantes!')
+                box2.add_widget(atencao)
+                box2.add_widget(aviso)
+                botao = Botaor(text='OK', on_release=pop.dismiss)
+                box2.add_widget(botao)
+                box.add_widget(box2)
+                pop.open()
+                App.get_running_app().root.get_screen('resultado').lista_temp = []
+            else:
+                self.ids.quantidade.text = str(num)
+                self.quantidade = str(num)
+                self.ids.text2.text = self.ids.quantidade.text
+                App.get_running_app().root.get_screen('resultado').lista_temp = []
+        except:
+            App.get_running_app().root.get_screen('numeros').avisar()
+
+class Sorteio(App):
+    def build(self):
+        return Gerenciador()
+
+Sorteio().run()
+
