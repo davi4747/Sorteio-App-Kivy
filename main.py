@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Made by Davi Sousa, E-mail: devdavi47@gmail.com, Github Profile: github.com/davig_sousa
+# Made by Davi Sousa, E-mail: devdavi47@gmail.com, Github Profile: github.com/davig-sousa
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
